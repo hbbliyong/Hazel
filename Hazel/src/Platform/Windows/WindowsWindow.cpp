@@ -1,6 +1,9 @@
 #include "hzpch.h"
 #include "WindowsWindow.h"
 
+#include "Hazel/Events/ApplicationEvent.h"
+#include "Hazel/Events/MouseEvent.h"
+#include "Hazel/Events/KeyEvent.h"
 
 namespace Hazel {
 
@@ -42,6 +45,13 @@ namespace Hazel {
     glfwMakeContextCurrent(m_Window);
     glfwSetWindowUserPointer(m_Window, &m_Data);
     SetVSync(true);
+
+    glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window)
+      {
+        WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+        WindowCloseEvent event;
+        data.EventCallback(event);
+      });
   }
 
   void WindowsWindow::Shutdown()
