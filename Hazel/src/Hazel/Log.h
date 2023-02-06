@@ -20,11 +20,11 @@ namespace Hazel {
 }
 
 //Core log macros
-#define HZ_CODE_TRACE(...)  ::Hazel::Log::GetCoreLogger()->trace(__VA_ARGS__)
-#define HZ_CODE_INFO(...)   ::Hazel::Log::GetCoreLogger()->info(__VA_ARGS__)
-#define HZ_CODE_WARN(...)   ::Hazel::Log::GetCoreLogger()->warn(__VA_ARGS__)
-#define HZ_CODE_ERROR(...)  ::Hazel::Log::GetCoreLogger()->error(__VA_ARGS__)
-#define HZ_CODE_FATAL(...)  ::Hazel::Log::GetCoreLogger()->debug(__VA_ARGS__)
+#define HZ_CORE_TRACE(...)  ::Hazel::Log::GetCoreLogger()->trace(__VA_ARGS__)
+#define HZ_CORE_INFO(...)   ::Hazel::Log::GetCoreLogger()->info(__VA_ARGS__)
+#define HZ_CORE_WARN(...)   ::Hazel::Log::GetCoreLogger()->warn(__VA_ARGS__)
+#define HZ_CORE_ERROR(...)  ::Hazel::Log::GetCoreLogger()->error(__VA_ARGS__)
+#define HZ_CORE_FATAL(...)  ::Hazel::Log::GetCoreLogger()->debug(__VA_ARGS__)
 
 //Client log macros
 #define HZ_TRACE(...)  ::Hazel::Log::GetClientLogger()->trace(__VA_ARGS__)
