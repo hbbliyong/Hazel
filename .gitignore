@@ -32,6 +32,6 @@
 *.app
 .vs/
 Debug
-bin/
+/bin/
 bin-int/
 *.user

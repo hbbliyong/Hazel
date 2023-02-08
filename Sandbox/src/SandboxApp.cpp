@@ -34,7 +34,6 @@ public:
     {
       HZ_TRACE("Tab key is pressed (poll)!");
     }
-
   }
 
   virtual void OnImGuiRender() override

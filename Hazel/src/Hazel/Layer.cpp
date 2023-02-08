@@ -7,9 +7,4 @@ Hazel::Layer::Layer(const std::string& debugName /*= "Layer"*/)
 {
 
 }
-
-Hazel::Layer::~Layer()
-{
-
-}
 }
