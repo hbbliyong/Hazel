@@ -16,7 +16,7 @@ class ExampleLayer :public Hazel::Layer
 {
 public:
   ExampleLayer()
-    :Layer("Example"),m_Camera(-1.6f, 1.6f, -0.9f, 0.9f),m_CameraPosition(0.0f)
+    :Layer("Example"),m_CameraController(1280.0f/720.0f,true)
   {
     m_VertexArray.reset(VertexArray::Create());
 
@@ -141,30 +141,12 @@ public:
 
   void OnUpdate(Timestep ts) override
   {
-    if (Hazel::Input::IsKeyPressed(HZ_KEY_LEFT))
-    {
-      m_CameraPosition.x -= m_CameraMoveSpeed * ts;
-    }
-    else if (Hazel::Input::IsKeyPressed(HZ_KEY_RIGHT))
-      m_CameraPosition.x += m_CameraMoveSpeed * ts;
-
-    if (Hazel::Input::IsKeyPressed(HZ_KEY_UP))
-      m_CameraPosition.y += m_CameraMoveSpeed * ts;
-    else if (Hazel::Input::IsKeyPressed(HZ_KEY_DOWN))
-      m_CameraPosition.y -= m_CameraMoveSpeed * ts;
-
-    if (Hazel::Input::IsKeyPressed(HZ_KEY_A))
-      m_CameraRotation += m_CameraRotationSpeed * ts;
-    if (Hazel::Input::IsKeyPressed(HZ_KEY_D))
-      m_CameraRotation -= m_CameraRotationSpeed * ts;
+    m_CameraController.OnUpdate(ts);
 
     RenderCommand::SetClearColor({ .1f,.1f,.1f,1 });
     RenderCommand::Clear();
-
-    m_Camera.SetPosition(m_CameraPosition);
-    m_Camera.SetRotation(m_CameraRotation);
-   HZ_INFO("{0},{1},  {2}",m_CameraPosition.x,m_CameraPosition.y,  m_CameraRotation);
-    Renderer::BeginScene(m_Camera);
+ 
+    Renderer::BeginScene(m_CameraController.GetCamera());
 
     glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
@@ -200,14 +182,9 @@ public:
        ImGui::End();
   }
 
-  void OnEvent(Hazel::Event& event) override
+  void OnEvent(Hazel::Event& e) override
   {
-    if (event.GetEventType() == Hazel::EventType::KeyPressed) {
-      Hazel::KeyPressedEvent& e = (Hazel::KeyPressedEvent&)event;
-      if (e.GetKeyCode() == HZ_KEY_TAB)
-        HZ_TRACE("Tab key is pressed (event)!");
-      HZ_TRACE("{0}", (char)e.GetKeyCode());
-    }
+    m_CameraController.OnEvent(e);
   }
 private:
   ShaderLibrary m_ShaderLibrary;
@@ -222,12 +199,7 @@ private:
   Ref<Hazel::Texture2D> m_Texture, m_ChernoLogoTexture;
  
 
-  OrthographicCamera m_Camera;
-  glm::vec3 m_CameraPosition;
-  float m_CameraMoveSpeed = 5.0f;
-
-  float m_CameraRotation = 0.0f;
-  float m_CameraRotationSpeed = 180.0f;
+  OrthographicCameraController m_CameraController;
 
   glm::vec3 m_SquareColor = { .2f,.3f,.8f };
 };

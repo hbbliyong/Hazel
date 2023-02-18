@@ -8,10 +8,12 @@ workspace "Hazel"
 		"Release",
 		"Dist"
 	}
-    flags
+	
+	flags
 	{
 		"MultiProcessorCompile"
 	}
+
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 -- Include directories relative to root folder (solution directory)
@@ -22,9 +24,12 @@ IncludeDir["ImGui"] = "Hazel/vendor/imgui"
 IncludeDir["glm"] = "Hazel/vendor/glm"
 IncludeDir["stb_image"] = "Hazel/vendor/stb_image"
 
-include "Hazel/vendor/GLFW"
-include "Hazel/vendor/Glad"
-include "Hazel/vendor/imgui"
+group "Dependencies"
+	include "Hazel/vendor/GLFW"
+	include "Hazel/vendor/Glad"
+	include "Hazel/vendor/imgui"
+
+group ""
 
 project "Hazel"
 	location "Hazel"
