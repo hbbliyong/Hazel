@@ -99,7 +99,7 @@ public:
 			}
 		)";
 
-    m_Shader.reset( Shader::Create(vertexSrc, fragmentSrc));
+    m_Shader=Shader::Create("VertexPosColor",vertexSrc, fragmentSrc);
 
     std::string flatColorShaderVertexSrc = R"(
 			#version 330 core
@@ -127,16 +127,16 @@ public:
 				color = vec4(u_Color, 1.0);
 			}
 		)";
-    m_FlatColorShader.reset( Shader::Create(flatColorShaderVertexSrc, flatColorShaderFragmentSrc));
+    m_FlatColorShader= Shader::Create("FlatColor",flatColorShaderVertexSrc, flatColorShaderFragmentSrc);
 
 
-    m_TextureShader.reset(Hazel::Shader::Create("assets/shaders/Texture.glsl"));
+   auto textureShader= m_ShaderLibrary.Load("assets/shaders/Texture.glsl");
 
     m_Texture = Hazel::Texture2D::Create("assets/textures/Checkerboard.png");
     m_ChernoLogoTexture = Hazel::Texture2D::Create("assets/textures/ChernoLogo.png");
 
-    std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_TextureShader)->Bind();
-    std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);
+    std::dynamic_pointer_cast<Hazel::OpenGLShader>(textureShader)->Bind();
+    std::dynamic_pointer_cast<Hazel::OpenGLShader>(textureShader)->UploadUniformInt("u_Texture", 0);
   }
 
   void OnUpdate(Timestep ts) override
@@ -183,11 +183,13 @@ public:
    // Renderer::Submit(m_BlueShader, m_SquareVA);
     Renderer::Submit(m_Shader, m_VertexArray);
 
+    auto textureShader = m_ShaderLibrary.Get("Texture");
+
     m_Texture->Bind();
-    Renderer::Submit(m_TextureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+    Renderer::Submit(textureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
     m_ChernoLogoTexture->Bind();
-    Renderer::Submit(m_TextureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+    Renderer::Submit(textureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
     Renderer::EndScene();
   }
 
@@ -208,14 +210,15 @@ public:
     }
   }
 private:
-  std::shared_ptr <VertexArray> m_VertexArray;
-  std::shared_ptr<Shader> m_Shader;
+  ShaderLibrary m_ShaderLibrary;
+
+  Ref <VertexArray> m_VertexArray;
+  Ref<Shader> m_Shader;
 
 
-  std::shared_ptr<Shader> m_FlatColorShader;
+  Ref<Shader>  m_FlatColorShader;
   std::shared_ptr<VertexArray> m_SquareVA;
 
-  Ref<Shader>   m_TextureShader;
   Ref<Hazel::Texture2D> m_Texture, m_ChernoLogoTexture;
  
 
