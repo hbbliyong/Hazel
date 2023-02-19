@@ -31,7 +31,7 @@ namespace Hazel
     bool m_Rotation;
 
     glm::vec3 m_CameraPosition = { .0f,.0f,.0f };
-    float m_CameraRotation = .0f;
+    float m_CameraRotation = .0f;//In degrees, in the anti-clockwise direction
     float m_CameraTranslationSpeed = 5.0f, m_CameraRotationSpeed = 180.0f;
   };
 }
