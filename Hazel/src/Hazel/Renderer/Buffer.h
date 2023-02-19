@@ -1,10 +1,10 @@
 #pragma once
 #include <cstdint>
 namespace Hazel {
-	enum class ShaderDataType
-	{
-		None = 0, Float, Float2, Float3, Float4, Mat3, Mat4, Int, Int2, Int3, Int4, Bool
-	};
+  enum class ShaderDataType
+  {
+    None = 0, Float, Float2, Float3, Float4, Mat3, Mat4, Int, Int2, Int3, Int4, Bool
+  };
 
   static uint32_t ShaderDataTypeSize(ShaderDataType type)
   {
@@ -27,20 +27,20 @@ namespace Hazel {
     return 0;
   }
 
-	struct BufferElement
-	{
-		std::string Name;
-		ShaderDataType Type;
-		uint32_t Size;
-		uint32_t Offset;
-		bool Normalized;
+  struct BufferElement
+  {
+    std::string Name;
+    ShaderDataType Type;
+    uint32_t Size;
+    size_t Offset;
+    bool Normalized;
 
-		BufferElement(){}
-		BufferElement(ShaderDataType type, const std::string name, bool normlized = false)
-			:Name(name), Type(type), Size(ShaderDataTypeSize(type)), Offset(0), Normalized(Normalized)
-		{
+    BufferElement() = default;
+    BufferElement(ShaderDataType type, const std::string name, bool normlized = false)
+      :Name(name), Type(type), Size(ShaderDataTypeSize(type)), Offset(0), Normalized(normlized)
+    {
 
-		}
+    }
     uint32_t GetComponentCount() const
     {
       switch (Type)
@@ -61,12 +61,12 @@ namespace Hazel {
       HZ_CORE_ASSERT(false, "Unknown ShaderDataType!");
       return 0;
     }
-	};
+  };
 
   class BufferLayout {
   public:
-    BufferLayout(){}
-    
+    BufferLayout() {}
+
     BufferLayout(const std::initializer_list<BufferElement>& elements)
       :m_Elements(elements)
     {
@@ -83,10 +83,10 @@ namespace Hazel {
     std::vector<BufferElement>::const_iterator end() const { return m_Elements.end(); }
   private:
     void CalculateOffsetAndStride() {
-      uint32_t offset = 0;
+      size_t  offset = 0;
       m_Stride = 0;
 
-      for (auto& element:m_Elements)
+      for (auto& element : m_Elements)
       {
         element.Offset = offset;
         offset += element.Size;
@@ -99,32 +99,32 @@ namespace Hazel {
   };
 
 
-	class VertexBuffer
-	{
-	public:
-		VertexBuffer() {};
-		virtual	~VertexBuffer()=default;
+  class VertexBuffer
+  {
+  public:
+    VertexBuffer() {};
+    virtual	~VertexBuffer() = default;
 
-		virtual void Bind() const = 0;
-		virtual void Unbind() const = 0;
+    virtual void Bind() const = 0;
+    virtual void Unbind() const = 0;
 
     virtual const BufferLayout& GetLayout() const = 0;
     virtual void SetLayout(const BufferLayout& layout) = 0;
-		static VertexBuffer* Create(float* vertices, uint32_t size);
-	private:
+    static Ref<VertexBuffer> Create(float* vertices, uint32_t size);
+  private:
 
-	};
+  };
 
-	class IndexBuffer
-	{
-	public:
-		virtual	~IndexBuffer() = default;
+  class IndexBuffer
+  {
+  public:
+    virtual	~IndexBuffer() = default;
 
-	virtual void Bind() const = 0;
-	virtual void UnBind() const = 0;
+    virtual void Bind() const = 0;
+    virtual void UnBind() const = 0;
 
-	virtual uint32_t GetCount() const =0;
+    virtual uint32_t GetCount() const = 0;
 
-	static IndexBuffer* Create(uint32_t* indices, uint32_t size);
-	};
+    static Ref<IndexBuffer> Create(uint32_t* indices, uint32_t size);
+  };
 }
