@@ -7,7 +7,7 @@
 
 #include "GLFW/glfw3.h"
 #include "glad/glad.h"
-#include "Hazel/Application.h"
+#include "Hazel/Core/Application.h"
 
 namespace Hazel {
 
