@@ -1,7 +1,7 @@
 #pragma once
 
-#include "OrthographicCamera.h"
-#include "Texture.h"
+#include "Hazel/Renderer/OrthographicCamera.h"
+#include "Hazel/Renderer/Texture.h"
 namespace Hazel {
   class Renderer2D
   {

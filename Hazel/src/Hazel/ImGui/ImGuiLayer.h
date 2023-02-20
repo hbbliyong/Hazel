@@ -7,7 +7,7 @@
 #include "Hazel/Events/MouseEvent.h"
 namespace Hazel {
 
-  class HAZEL_API ImGuiLayer : public Layer
+  class  ImGuiLayer : public Layer
   {
   public:
     ImGuiLayer();

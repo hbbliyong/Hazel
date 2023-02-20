@@ -1,5 +1,5 @@
 #include "hzpch.h"
-#include "OpenGLShader.h"
+#include "Platform/OpenGL/OpenGLShader.h"
 
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
@@ -124,14 +124,21 @@ namespace Hazel {
   std::string OpenGLShader::ReadFile(const std::string& filepath)
   {
     std::string result;
-    std::ifstream in(filepath, std::ios::in|std::ios::binary);
+    std::ifstream in(filepath, std::ios::in | std::ios::binary);
     if (in)
     {
       in.seekg(0, std::ios::end);
-      result.resize(in.tellg());
-      in.seekg(0, std::ios::beg);
-      in.read(&result[0], result.size());
-      in.close();
+      size_t size = in.tellg();
+      if (size != -1) {
+        result.resize(size);
+        in.seekg(0, std::ios::beg);
+        in.read(&result[0], size);
+        in.close();
+      }
+      else
+      {
+        HZ_CORE_ERROR("Could not read from file '{0}'", filepath);
+      }
     }
     else
     {
@@ -148,7 +155,7 @@ namespace Hazel {
     size_t typeTokenLength = strlen(typeToken);
     //Start of shader type declaration line
     size_t pos = source.find(typeToken, 0);
-    while (pos!=std::string::npos)
+    while (pos != std::string::npos)
     {
       size_t eol = source.find_first_of("\r\n", pos);  // End of shader type declaration line
       HZ_CORE_ASSERT(eol != std::string::npos, "Syntax error");
@@ -159,11 +166,11 @@ namespace Hazel {
       size_t nextLinePos = source.find_first_not_of("\r\n", eol);//Start of shader code after shader type declaration line
       HZ_CORE_ASSERT(nextLinePos != std::string::npos, "Syntax error");
       pos = source.find(typeToken, nextLinePos);//Start of next shader type declaration line
-      
+
       shaderSources[ShaderTypeFromString(type)] =
-          (pos == std::string::npos)
-              ? source.substr(nextLinePos)
-              : source.substr(nextLinePos, pos - nextLinePos);
+        (pos == std::string::npos)
+        ? source.substr(nextLinePos)
+        : source.substr(nextLinePos, pos - nextLinePos);
     }
 
     return shaderSources;
@@ -174,9 +181,9 @@ namespace Hazel {
     GLuint program = glCreateProgram();
     HZ_CORE_ASSERT(shaderSources.size() <= 2, "We only support 2 shaders for now");
 
-    std::array<GLenum,2> glShaderIds;
+    std::array<GLenum, 2> glShaderIds;
     int glShaderIDIndex = 0;
-    for (auto& kv:shaderSources)
+    for (auto& kv : shaderSources)
     {
       GLenum type = kv.first;
       const std::string& source = kv.second;
@@ -213,14 +220,14 @@ namespace Hazel {
 
       // Attach our shaders to our program
       glAttachShader(program, shader);
-      glShaderIds[glShaderIDIndex++]=shader;
+      glShaderIds[glShaderIDIndex++] = shader;
     }
-   
+
 
     // Vertex and fragment shaders are successfully compiled.
     // Now time to link them together into a program.
     // Get a program object.
-    m_RendererID = program ;
+    m_RendererID = program;
 
     // Link our program
     glLinkProgram(program);
@@ -241,12 +248,12 @@ namespace Hazel {
       glDeleteProgram(program);
       // Don't leak shaders either.
 
-      for (auto id:glShaderIds)
+      for (auto id : glShaderIds)
       {
         glDetachShader(program, id);
         glDeleteShader(id);
       }
-      
+
       HZ_CORE_ERROR("{0}", infoLog.data());
       HZ_CORE_ASSERT(false, "Shader link failure!");
       return;
