@@ -48,3 +48,4 @@ bin-int/
 **.vcxproj.filters
 **.vcxproj.user
 *.json
+*.log
