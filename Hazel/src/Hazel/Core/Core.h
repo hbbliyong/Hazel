@@ -44,6 +44,15 @@
 #endif  // End of platform detection
 
 #ifdef HZ_DEBUG
+#if defined(HZ_PLATFORM_WINDOWS)
+#define  HZ_DEBUGBREAK() __debugbreak()
+#elif defined(HZ_PLATFORM_LINUX)
+#include <signal.h>
+#define  HZ_DEBUGBREAK() raise(SIGTRAP)
+#else "Platform doesn't support debugbreak yet!"
+#endif
+#define HZ_ENABLE_ASSERTS
+#else
 #define HZ_ENABLE_ASSERTS
 #endif
 
@@ -52,14 +61,14 @@
   {                                                   \
     if (!(x)) {                                       \
       HZ_ERROR("Assertion Failed: {0}", __VA_ARGS__); \
-      __debugbreak();                                 \
+      HZ_DEBUGBREAK();                                 \
     }                                                 \
   }
 #define HZ_CORE_ASSERT(x, ...)                             \
   {                                                        \
     if (!(x)) {                                            \
       HZ_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); \
-      __debugbreak();                                      \
+      HZ_DEBUGBREAK();                                      \
     }                                                      \
   }
 #else
