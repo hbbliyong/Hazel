@@ -3,12 +3,23 @@
 
 #include <glad/glad.h>
 namespace Hazel {
+
+  OpenGLVertexBuffer::OpenGLVertexBuffer(uint32_t size)
+  {
+    HZ_PROFILE_FUNCTION();
+
+    glCreateBuffers(1, &m_RendererId);
+    glBindBuffer(GL_ARRAY_BUFFER, m_RendererId);
+    glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_STATIC_DRAW);
+  }
+
   OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size)
   {
     glCreateBuffers(1, &m_RendererId);
     glBindBuffer(GL_ARRAY_BUFFER, m_RendererId);
     glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
   }
+
   OpenGLVertexBuffer::~OpenGLVertexBuffer()
   {
     glDeleteBuffers(1, &m_RendererId);
@@ -21,6 +32,13 @@ namespace Hazel {
   {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
   }
+
+  void OpenGLVertexBuffer::SetData(const void* data, uint32_t size)
+  {
+    glBindBuffer(GL_ARRAY_BUFFER, m_RendererId);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
+  }
+
   OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* indices, uint32_t count)
     :m_Count(count)
   {
