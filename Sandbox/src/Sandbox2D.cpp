@@ -15,6 +15,11 @@ void Sandbox2D::OnAttach()
 {
   m_CheckerboardTexture = Hazel::Texture2D::Create("assets/textures/Checkerboard.png");
 
+  Hazel::FramebufferSpecification fbSpec;
+  fbSpec.Width = 1280;
+  fbSpec.Height = 720;
+  m_Framebuffer = Hazel::Framebuffer::Create(fbSpec);
+
   // Init here
   m_Particle.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
   m_Particle.ColorEnd = { 254 / 255.0f, 109 / 255.0f, 41 / 255.0f, 1.0f };
@@ -40,6 +45,7 @@ void Sandbox2D::OnUpdate(Hazel::Timestep ts)
   // Render
   Hazel::Renderer2D::ResetStats();
   
+  m_Framebuffer->Bind();
   Hazel::RenderCommand::SetClearColor({ .1f,.1f,.1f,1 });
   Hazel::RenderCommand::Clear();
 
@@ -63,6 +69,7 @@ void Sandbox2D::OnUpdate(Hazel::Timestep ts)
     Hazel::Renderer2D::DrawRotatedQuad({ -2.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, rotation, m_CheckerboardTexture, 20.0f);
 
     Hazel::Renderer2D::EndScene();
+    m_Framebuffer->Unbind();
 
     Hazel::Renderer2D::BeginScene(m_CameraController.GetCamera());
     for (float y = -5.0f; y < 5.0f; y += 0.5f)
@@ -99,7 +106,7 @@ void Sandbox2D::OnImGuiRender()
 {
   HZ_PROFILE_FUNCTION();
   // Note: Switch this to true to enable dockspace
-  static bool dockingEnabled = false;
+  static bool dockingEnabled = true;
   if (dockingEnabled)
   {
     static bool dockspaceOpen = true;
@@ -171,9 +178,10 @@ void Sandbox2D::OnImGuiRender()
     ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
 
     ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
-
-    uint32_t textureID = m_CheckerboardTexture->GetRendererID();
-    ImGui::Image((void*)textureID, ImVec2{ 256.0f, 256.0f });
+    uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererId();
+    ImGui::Image((void*)textureID, ImVec2{ 1280,720 });
+    //uint32_t textureID = m_CheckerboardTexture->GetRendererID();
+    //ImGui::Image((void*)textureID, ImVec2{ 1280, 720 });
     ImGui::End();
 
     ImGui::End();
