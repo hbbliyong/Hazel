@@ -1439,6 +1439,7 @@
     </ClInclude>
     <ClInclude Include="src\Hazel\Renderer\Camera.h" />
     <ClInclude Include="vendor\entt\include\entt.hpp" />
+    <ClInclude Include="src\Hazel\Scene\SceneCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazel\Core\Application.cpp">
@@ -1537,5 +1538,6 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazel\Scene\SceneCamera.cpp" />
   </ItemGroup>
 </Project>
