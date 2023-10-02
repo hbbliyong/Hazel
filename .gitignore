@@ -39,6 +39,7 @@ Debug
 !vendor/bin/premake/
 
 bin-int/
+bin-intDebug-windows-x86_64/
 *.user
 
 # Visual Studio files and folder
@@ -49,4 +50,4 @@ bin-int/
 **.vcxproj.user
 *.json
 *.log
-/bin-intDebug-windows-x86_64/Hazelnut/Hazelnut.ilk
+
