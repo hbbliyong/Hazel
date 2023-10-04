@@ -9,9 +9,9 @@ namespace		Hazel
 	public:
 		Entity() = default;
 		Entity(entt::entity handle, Scene* scene);
-		Entity(const Entity&other)=default;
+		Entity(const Entity& other) = default;
 
-		template<typename T,typename... Args>
+		template<typename T, typename... Args>
 		T& AddComponent(Args&&... args)
 		{
 			HZ_CORE_ASSERT(!HasComponent<T>(), "Entity alread has component!");
@@ -43,9 +43,20 @@ namespace		Hazel
 			return  m_EntityHandle != entt::null;
 		}
 
+		operator uint32_t() const { return (uint32_t)m_EntityHandle; }
+		bool operator==(const Entity& other) const
+		{
+			return m_EntityHandle == other.m_EntityHandle && m_Scene == other.m_Scene;
+		}
+
+		bool operator!=(const Entity& other) const
+		{
+			return !(*this == other);
+		}
+
 	private:
 		entt::entity m_EntityHandle{ entt::null };
-		Scene* m_Scene=nullptr;
+		Scene* m_Scene = nullptr;
 
 	};
 }
