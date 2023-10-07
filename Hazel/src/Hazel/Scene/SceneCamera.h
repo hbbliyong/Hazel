@@ -12,8 +12,9 @@ namespace Hazel
 		SceneCamera();
 		virtual ~SceneCamera() override = default;
 
-		void SetOrthographic(float size, float nearClip, float farClip);
 		void SetPerspective(float verticalFOV, float nearClip, float farClip);
+		void SetOrthographic(float size, float nearClip, float farClip);
+
 
 		void SetViewportSize(uint32_t width, uint32_t height);
 
@@ -44,6 +45,6 @@ namespace Hazel
 		float m_OrthographicSize = 10.0f;
 		float m_OrthographicNear = -1.0f, m_OrthographicFar = 1.0f;
 
-		float m_AspectRatio = 1.0f;
+		float m_AspectRatio = 0.0f;
 	};
 }

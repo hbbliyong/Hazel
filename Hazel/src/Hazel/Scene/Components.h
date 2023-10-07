@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include "SceneCamera.h"
 #include "ScriptableEntity.h"
 
@@ -13,27 +14,33 @@ namespace Hazel
 		TagComponent() = default;
 		TagComponent(const TagComponent&) = default;
 		TagComponent(const std::string& tag)
-			: Tag(tag) {}
+			: Tag(tag)
+		{
+		}
 	};
 
 	struct TransformComponent
 	{
-		glm::mat4 Transform{ 1.0f };
+		glm::vec3 Translation = { 0.0f, 0.0f, 0.0f };
+		glm::vec3 Rotation = { 0.0f, 0.0f, 0.0f };
+		glm::vec3 Scale = { 1.0f, 1.0f, 1.0f };
 
 		TransformComponent() = default;
 		TransformComponent(const TransformComponent&) = default;
-		TransformComponent(const glm::mat4& transform)
-			:Transform(transform)
+		TransformComponent(const glm::vec3& translation)
+			:Translation(translation)
 		{
 		};
 
-		operator glm::mat4& ()
+		glm::mat4& GetTransform()
 		{
-			return Transform;
-		}
-		operator const glm::mat4& ()const
-		{
-			return Transform;
+			glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), Rotation.x, { 1,0,0 })
+				* glm::rotate(glm::mat4(1.0f), Rotation.y, { 0,1,0 })
+				* glm::rotate(glm::mat4(1.0f), Rotation.z, { 0,0,1 });
+
+			return glm::translate(glm::mat4(1.0f), Translation)
+				* rotation
+				* glm::scale(glm::mat4(1.0f), Scale);
 		}
 	};
 
@@ -64,7 +71,7 @@ namespace Hazel
 		ScriptableEntity* Instance = nullptr;
 
 		//InstantiateScript为函数指针，无参，返回ScriptableEntity*
-		ScriptableEntity*(*InstantiateScript)();
+		ScriptableEntity* (*InstantiateScript)();
 		void (*DestroyScript)(NativeScriptComponent*);
 
 		template<typename T>

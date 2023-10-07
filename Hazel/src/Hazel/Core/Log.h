@@ -1,8 +1,13 @@
 #pragma once
 
 #include "Hazel/Core/Base.h"
+
+// This ignores all warnings raised inside External headers
+//https://stackoverflow.com/questions/2541984/how-to-suppress-warnings-in-external-headers-in-visual-c/2541990#2541990
+#pragma warning(push, 0)
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h>
+#pragma waring(pop)
 
 namespace Hazel {
   class  Log
