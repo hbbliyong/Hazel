@@ -172,7 +172,7 @@ namespace Hazel {
 	}
 
 	void SceneSerializer::SerializeRuntime(const std::string& filepath)
-	{
+	{		
 		// Not implemented
 		//HZ_CORE_ASSERT(false);
 	}
