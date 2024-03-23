@@ -7,8 +7,10 @@
 #include "Hazel/Scene/SceneSerializer.h"
 
 #include "Hazel/Utils/PlatformUtils.h"
-
-namespace Hazel {
+#include "ImGuizmo.h"
+#include "Hazel/Math/Math.h"
+namespace Hazel
+{
 
 	EditorLayer::EditorLayer()
 		: Layer("EditorLayer"), m_CameraController(1280.0f / 720.0f), m_SquareColor({ 0.2f, 0.3f, 0.8f, 1.0f })
@@ -31,7 +33,7 @@ namespace Hazel {
 #if 0
 		// Entity
 		auto square = m_ActiveScene->CreateEntity("Green Square");
-		square.AddComponent<SpriteRendererComponent>(glm::vec4{0.0f, 1.0f, 0.0f, 1.0f});
+		square.AddComponent<SpriteRendererComponent>(glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
 
 		auto redSquare = m_ActiveScene->CreateEntity("Red Square");
 		redSquare.AddComponent<SpriteRendererComponent>(glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });
@@ -220,6 +222,57 @@ namespace Hazel {
 
 		uint64_t textureID = m_Framebuffer->GetColorAttachmentRendererId();
 		ImGui::Image(reinterpret_cast<void*>(textureID), ImVec2{ m_ViewportSize.x, m_ViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+
+		//Gizmos
+		Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
+		if (selectedEntity && m_GizmoType != -1)
+		{
+			ImGuizmo::SetOrthographic(false);
+			ImGuizmo::SetDrawlist();
+
+			float windowWidth = (float)ImGui::GetWindowWidth();
+			float windowHeight = (float)ImGui::GetWindowHeight();
+			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+
+			//Camera
+			auto cameraEntity = m_ActiveScene->GetPrimaryCameraEntity();
+			const auto& camera = cameraEntity.GetComponent<CameraComponent>().Camera;
+			const glm::mat4& cameraProjection = camera.GetProjection();
+			glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());
+
+
+			//Entity transform
+			auto& tc = selectedEntity.GetComponent<TransformComponent>();
+			glm::mat4 transform = tc.GetTransform();
+
+			//Snapping
+			bool snap = Input::IsKeyPressed(Key::LeftControl);
+			float snapValue = .5f;//Snap to .5m for translation/scale
+			//Snap to 45 degrees for ration
+			if (m_GizmoType==ImGuizmo::OPERATION::ROTATE)
+			{
+				snapValue = 45.0f;
+			}
+			float snapValues[3] = { snapValue,snapValue,snapValue };
+
+
+
+			ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection), ImGuizmo::OPERATION::TRANSLATE,
+				ImGuizmo::LOCAL, glm::value_ptr(transform),nullptr,snap?snapValues:nullptr);
+			if (ImGuizmo::IsUsing())
+			{
+				glm::vec3 translation, rotation, scale;
+				Math::DecomposeTransform(transform, translation, rotation, scale);
+
+				glm::vec3 deltaRotation = rotation - tc.Rotation;
+				
+				tc.Translation = translation;
+				tc.Rotation += deltaRotation;
+				tc.Scale = scale;
+			}
+
+
+		}
 		ImGui::End();
 		ImGui::PopStyleVar();
 
@@ -245,26 +298,39 @@ namespace Hazel {
 		switch (e.GetKeyCode())
 		{
 			case Key::N:
-			{
-				if (control)
-					NewScene();
+				{
+					if (control)
+						NewScene();
 
-				break;
-			}
+					break;
+				}
 			case Key::O:
-			{
-				if (control)
-					OpenScene();
+				{
+					if (control)
+						OpenScene();
 
-				break;
-			}
+					break;
+				}
 			case Key::S:
-			{
-				if (control && shift)
-					SaveSceneAs();
+				{
+					if (control && shift)
+						SaveSceneAs();
 
+					break;
+				}
+				// Gizmos
+			case Key::Q:
+				m_GizmoType = -1;
 				break;
-			}
+			case Key::W:
+				m_GizmoType = ImGuizmo::OPERATION::TRANSLATE;
+				break;
+			case Key::E:
+				m_GizmoType = ImGuizmo::OPERATION::ROTATE;
+				break;
+			case Key::R:
+				m_GizmoType = ImGuizmo::OPERATION::SCALE;
+				break;
 		}
 	}
 
@@ -277,7 +343,7 @@ namespace Hazel {
 
 	void EditorLayer::OpenScene()
 	{
-	std::optional<	std::string> filepath = FileDialogs::OpenFile("Hazel Scene (*.hazel)\0*.hazel\0");
+		std::optional<	std::string> filepath = FileDialogs::OpenFile("Hazel Scene (*.hazel)\0*.hazel\0");
 		if (filepath)
 		{
 			m_ActiveScene = CreateRef<Scene>();
