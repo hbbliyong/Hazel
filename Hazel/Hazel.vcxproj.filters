@@ -1467,6 +1467,9 @@
     <ClInclude Include="src\Hazel\Math\Math.h">
       <Filter>src\Hazel</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazel\Renderer\EditorCamera.h">
+      <Filter>src\Hazel\Renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazel\Core\Application.cpp">
@@ -1579,6 +1582,9 @@
     </ClCompile>
     <ClCompile Include="src\Hazel\Math\Math.cpp">
       <Filter>src\Hazel</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazel\Renderer\EditorCamera.cpp">
+      <Filter>src\Hazel\Renderer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
