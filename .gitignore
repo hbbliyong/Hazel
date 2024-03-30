@@ -37,7 +37,8 @@ Debug
 # Binaries
 **/bin/
 !vendor/bin/premake/
-
+/bin
+bin/
 bin-int/
 bin-intDebug-windows-x86_64/
 *.user
