@@ -38,6 +38,7 @@ in vec4 v_Color;
 in vec2 v_TexCoord;
 in flat float v_TexIndex;
 in float v_TilingFactor;
+in flat int v_EntityID;
 
 uniform sampler2D u_Textures[32];
 
