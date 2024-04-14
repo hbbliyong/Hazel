@@ -52,3 +52,4 @@ bin-intDebug-windows-x86_64/
 *.json
 *.log
 
+/scripts/__pycache__
