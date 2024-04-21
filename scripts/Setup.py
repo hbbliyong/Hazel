@@ -1,20 +1,21 @@
 import os
 import subprocess
-import CheckPython
+import platform
 
-#Make sure everything we need is installed
-CheckPython.ValidatePackages()
+from SetupPython import PythonConfiguration as PythonRequirements
 
-import Vulkan
 
-#change from Scripts directory to root
-os.chdir('../')
+# Make sure everything we need for the setup is installed
+PythonRequirements.Validate()
 
-if(not Vulkan.CheckVulkanSDK()):
-    print('Vulkan SDK not installed.')
+from SetupVulkan import VulkanConfiguration as VulkanRequirements
 
-if(not Vulkan.CheckVulkanSDKDebugLibs()):
-    print("Vulkan SDK debug libs not found")
+os.chdir('./../')# Change from devtools/scripts directory to root
 
-print("Running premake...")
-subprocess.call(["Vendor/premake/bin/premake5.exe","vs2019"])
+VulkanRequirements.Validate()
+
+if(platform.system()=="Window"):
+    print("\nRunning premake...")
+    subprocess.call([os.path.abspath("./scripts/Win-GenProjects.bat"),"nopause"])
+
+print("\nSetup completed!")    
