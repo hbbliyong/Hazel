@@ -52,3 +52,7 @@ bin-intDebug-windows-x86_64/
 *.json
 *.log
 
+# Directories
+Hazel/vendor/VulkanSDK
+Hazelnut/assets/cache
+scripts/__pycache__

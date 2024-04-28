@@ -75,6 +75,9 @@
     <ClInclude Include="src\Hazel\Core\Application.h">
       <Filter>src\Hazel\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazel\Core\Assert.h">
+      <Filter>src\Hazel\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazel\Core\Base.h">
       <Filter>src\Hazel\Core</Filter>
     </ClInclude>
@@ -100,6 +103,9 @@
       <Filter>src\Hazel\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazel\Core\PlatformDetection.h">
+      <Filter>src\Hazel\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazel\Core\Timer.h">
       <Filter>src\Hazel\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazel\Core\Timestep.h">
@@ -168,6 +174,9 @@
     <ClInclude Include="src\Hazel\Renderer\Texture.h">
       <Filter>src\Hazel\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazel\Renderer\UniformBuffer.h">
+      <Filter>src\Hazel\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazel\Renderer\VertexArray.h">
       <Filter>src\Hazel\Renderer</Filter>
     </ClInclude>
@@ -205,6 +214,9 @@
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLTexture.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLUniformBuffer.h">
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArray.h">
@@ -1535,6 +1547,9 @@
     <ClCompile Include="src\Hazel\Renderer\Texture.cpp">
       <Filter>src\Hazel\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazel\Renderer\UniformBuffer.cpp">
+      <Filter>src\Hazel\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hazel\Renderer\VertexArray.cpp">
       <Filter>src\Hazel\Renderer</Filter>
     </ClCompile>
@@ -1563,6 +1578,9 @@
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLTexture.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLUniformBuffer.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp">
